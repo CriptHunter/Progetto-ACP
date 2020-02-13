@@ -49,6 +49,8 @@ public:
 		{
 			row_count = _row_count;
 			column_count = _column_count;
+			row = 0;
+			column = 0;
 		}
 
 		void next_elem() 
@@ -65,6 +67,13 @@ public:
 		void next_row()
 		{
 			row++;
+			column = 0;
+		}
+
+		void next_column()
+		{
+			column++;
+			row = 0;
 		}
 	};
 
@@ -74,28 +83,48 @@ public:
 	}
 
 	bool end(iterator& i) {
-		return i.row < row_count;
+		return i.row < row_count && i.column < column_count;
 	}
 
+	//ritorna l'elemento puntato dall'iteratore
+	//scorre la tabella riga per riga
 	T get_elem(iterator& i) {
 		return table_vector[i.row][i.column];
 	}
 
+	//ritorna l'intera riga puntata dall'iteratore
 	vector<T> get_row(iterator &i) {
 		return table_vector[i.row];
+	}
+
+	//ritorna l'intera colonna puntata dall'iteratore
+	vector<T> get_column(iterator &i) {
+		vector<T> c;
+		for(int k = 0; k < i.row_count; k++)
+		{
+			c.push_back(table_vector[k][i.column]);
+		}
+		return c;
 	}
 };
 
 
-/*template <typename T>
-ostream &operator<<(ostream &os, Table<T> t)
+template <class T>
+ostream &operator<<(ostream &os, Table<T>& t)
 {
-	typename Table<T>::Table_iterator it;
+	typename Table<T>::iterator i(t.get_row_count(), t.get_column_count());
+    for(t.begin(i); t.end(i); i.next_row())
+    	cout << t.get_row(i) << endl;
 
-	for(it.set_begin(); it.check_end(); it.next())
-	{
-		cout << "ciao" << endl;
-	}
+    return os;
+}
 
-	return os;
-}*/
+template<class T>
+ostream& operator<<(ostream& stream, const std::vector<T>& values)
+{
+    stream << "[ ";
+    copy( begin(values), end(values), ostream_iterator<T>(stream, " ") );
+    stream << ']';
+    return stream;
+}
+
