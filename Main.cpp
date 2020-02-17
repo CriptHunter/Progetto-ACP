@@ -2,7 +2,7 @@
 
 int main()
 {
-	Table<int> t(3, {"X", "Y", "Z"});
+	table<int> t(3, {"X", "Y", "Z"});
 
 	vector<int> v1;
 	v1.push_back(1);
@@ -30,7 +30,7 @@ int main()
 	t.add_row(v4);
 	t.delete_row(3);
 
-	Table<string> t1(3, {"AAAA", "BBBB", "CCCC"});
+	table<string> t1(3, {"QQQQ", "WWWW", "EEEE"});
 
 	vector<string> v5;
 	v5.push_back("aaaa");
@@ -50,6 +50,40 @@ int main()
 	t1.add_row(v5);
 	t1.add_row(v6);
 	t1.add_row(v7);
+
+
+
+	cout << "############## stampa per elementi #################" << endl;
+	for(table<int>::table_iterator i = t.begin_ti(); i != t.end_ti(); ++i)
+		cout << i.get() << endl;
+
+	cout << endl;
+
+	for(table<string>::table_iterator i = t1.begin_ti(); i != t1.end_ti(); ++i)
+		cout << i.get() << endl;
+
+	cout << "############## stampa per righe #################" << endl;
+	for(table<int>::row_iterator i = t.begin_ri(); i != t.end_ri(); ++i)
+		cout << i.get() << endl;
+
+	cout << endl;
+
+	for(table<string>::row_iterator i = t1.begin_ri(); i != t1.end_ri(); ++i)
+		cout << i.get() << endl;
+
+	cout << "############## stampa per colonne #################" << endl;
+	for(table<int>::column_iterator i = t.begin_ci(); i != t.end_ci(); ++i)
+		cout << i.get() << endl;
+
+	cout << endl;
+
+	for(table<string>::column_iterator i = t1.begin_ci(); i != t1.end_ci(); ++i)
+		cout << i.get() << endl;
+
+	cout << "############## stampa tabella #################" << endl;
+	cout << t << endl;
+	cout << t1 << endl;
+
 
 	/*Table<int>::iterator i(t.get_row_count(), t.get_column_count());
 	Table<string>::iterator i1(t1.get_row_count(), t1.get_column_count());
@@ -109,5 +143,5 @@ int main()
     cout << t4 << endl;
     cout << t5 << endl;*/
 
-    
+
 }

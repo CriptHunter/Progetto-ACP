@@ -8,7 +8,7 @@ using namespace std;
 
 template <typename T>
 
-class Table 
+class table 
 {
 private:
 	vector <vector<T>> table_vector;
@@ -18,16 +18,16 @@ private:
 
 public:
 	//costruttore con tabella vuota senza heading
-	Table(int _column_count = 0): row_count(0), column_count(_column_count) { }
+	table(int _column_count = 0): row_count(0), column_count(_column_count) { }
 
 	//costruttore con tabella vuota e heading
-	Table(int _column_count, vector<string> heading): row_count(0), column_count(_column_count)
+	table(int _column_count, vector<string> heading): row_count(0), column_count(_column_count)
 	{
 		set_heading(heading);
 	}
 
 	//copy constructor
-	Table(const Table &other)
+	table(const table &other)
 	{
   		row_count = other.get_row_count();
   		column_count = other.get_column_count();
@@ -86,81 +86,156 @@ public:
 		return heading;
 	}
 
-	class iterator
-	{
-	public:
-		int row;
-		int column;
-		int row_count;
-		int column_count;
+	class table_iterator
+    {
+    public:
+        table_iterator(vector<vector<T>>& _table_vector, int _row_count, int _column_count, int _row = 0, int _column = 0)
+        {
+        	table_vector = _table_vector;
+        	row = _row;
+        	column = _column;
+        	row_count = _row_count;
+        	column_count = _column_count;
+        }
 
-		iterator(int _row_count, int _column_count)
-		{
-			row_count = _row_count;
-			column_count = _column_count;
-			row = 0;
-			column = 0;
-		}
+        table_iterator operator++()
+        { 
+        	table_iterator i = *this; 
+        	if(column < column_count - 1)
+        		column++;
+        	else
+        	{
+        		row++;
+        		column = 0;
+        	}
 
-		void next_elem() 
-		{
-			if(column < column_count - 1)
-				column++;
-			else
-			{
-				column = 0;
-				row++;
-			}
-		}
+        	return i; 
+        }
 
-		void next_row()
-		{
-			row++;
-			column = 0;
-		}
+        T get() 
+        { 
+        	return table_vector[row][column];
+        }
 
-		void next_column()
-		{
-			column++;
-			row = 0;
-		}
-	};
+        bool operator!=(const table_iterator& other) 
+        { 
+        	return !(row == other.row && column == other.column);
+        }
 
-	void begin(iterator& i) 
-	{
-		i.row = 0;
-		i.column = 0;
-	}
+        int row;
+        int column;
 
-	bool end(iterator& i) 
-	{
-		return i.row < row_count && i.column < column_count;
-	}
+    private:
+        vector<vector<T>> table_vector;
+        int row_count;
+        int column_count;
+    };
 
-	//ritorna l'elemento puntato dall'iteratore
-	//scorre la tabella riga per riga
-	T get_elem(iterator& i) 
-	{
-		return table_vector[i.row][i.column];
-	}
+    class row_iterator
+    {
+    public:
+        row_iterator(vector<vector<T>>& _table_vector, int _row_count, int _row = 0)
+        {
+        	table_vector = _table_vector;
+        	row = _row;
+        	row_count = _row_count;
+        }
 
-	//ritorna l'intera riga puntata dall'iteratore
-	vector<T> get_row(iterator &i) 
-	{
-		return table_vector[i.row];
-	}
+        row_iterator operator++()
+        { 
+        	row_iterator i = *this; 
+        	row++;
+        	return i; 
+        }
 
-	//ritorna l'intera colonna puntata dall'iteratore
-	vector<T> get_column(iterator &i) 
-	{
-		vector<T> c;
-		for(int k = 0; k < i.row_count; k++)
-			c.push_back(table_vector[k][i.column]);
-		return c;
-	}
+        vector<T> get() 
+        { 
+        	return table_vector[row];
+        }
+
+        bool operator!=(const row_iterator& other) 
+        { 
+        	return row != other.row + 1;
+        }
+
+        int row;
+
+    private:
+        vector<vector<T>> table_vector;
+        int row_count;
+    };
+
+    class column_iterator
+    {
+    public:
+        column_iterator(vector<vector<T>>& _table_vector, int _row_count, int _column_count, int _column = 0)
+        {
+        	table_vector = _table_vector;
+        	row_count = _row_count;
+        	column = _column;
+        	column_count = _column_count;
+        }
+
+        column_iterator operator++()
+        { 
+        	column_iterator i = *this; 
+        	column++;
+        	return i; 
+        }
+
+        vector<T> get() 
+        { 
+        	vector<T> temp;
+        	for(int i = 0; i < row_count; i++)
+        		temp.push_back(table_vector[i][column]);
+        	return temp;
+        }
+
+        bool operator!=(const column_iterator& other) 
+        { 
+        	return column != other.column + 1;
+        }
+
+        int column;
+
+    private:
+        vector<vector<T>> table_vector;
+        int row_count;
+        int column_count;
+    };
+
+    table_iterator begin_ti()
+    {
+    	return table_iterator(table_vector, row_count, column_count);
+    }
+
+    table_iterator end_ti()
+    {
+    	return table_iterator(table_vector, row_count, column_count, row_count - 1, column_count - 1);
+    }
+
+    row_iterator begin_ri()
+    {
+    	return row_iterator(table_vector, row_count);
+    }
+
+    row_iterator end_ri()
+    {
+    	return row_iterator(table_vector, row_count, row_count - 1);
+    }
+
+    column_iterator begin_ci()
+    {
+    	return column_iterator(table_vector, row_count, column_count);
+    }
+
+    column_iterator end_ci()
+    {
+    	return column_iterator(table_vector, row_count, column_count, column_count - 1);
+    }
 
 	//applica una funzione a tutti gli elementi della tabella, restituisce una nuova tabella
-	template <typename X, typename Y>
+	/*template <typename X, typename Y>
 	Table<T> map(function<X(Y)> function)
 	{
 		Table<T> t2(get_column_count(), get_heading());
@@ -172,20 +247,8 @@ public:
 			t2.add_row(v);
 		}
 		return t2;
-	}
+	}*/
 };
-
-
-template <class T>
-ostream &operator<<(ostream &os, Table<T>& t)
-{
-	cout << t.get_heading() << endl;
-	typename Table<T>::iterator i(t.get_row_count(), t.get_column_count());
-    for(t.begin(i); t.end(i); i.next_row())
-    	cout << t.get_row(i) << endl;
-
-    return os;
-}
 
 template<class T>
 ostream& operator<<(ostream& stream, const std::vector<T>& values)
@@ -195,6 +258,17 @@ ostream& operator<<(ostream& stream, const std::vector<T>& values)
     stream << ']';
     return stream;
 }
+
+
+template <class T>
+ostream &operator<<(ostream &os, table<T>& t)
+{
+	cout << t.get_heading() << endl;
+	for(typename table<T>::row_iterator i = t.begin_ri(); i != t.end_ri(); ++i)
+    	cout << i.get() << endl;
+    return os;
+}
+
 
 
 
