@@ -51,7 +51,7 @@ int main()
 	t1.add_row(v6);
 	t1.add_row(v7);
 
-	Table<int>::iterator i(t.get_row_count(), t.get_column_count());
+	/*Table<int>::iterator i(t.get_row_count(), t.get_column_count());
 	Table<string>::iterator i1(t1.get_row_count(), t1.get_column_count());
 
 	cout << "############## stampa per elementi #################" << endl;
@@ -107,5 +107,7 @@ int main()
 
     cout << t3 << endl;
     cout << t4 << endl;
-    cout << t5 << endl;
+    cout << t5 << endl;*/
+
+    
 }
