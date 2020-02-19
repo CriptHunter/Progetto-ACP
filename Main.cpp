@@ -28,7 +28,6 @@ int main()
 	t.add_row(v2);
 	t.add_row(v3);
 	t.add_row(v4);
-	t.delete_row(3);
 
 	table<string> t1(3, {"QQQQ", "WWWW", "EEEE"});
 
@@ -50,8 +49,6 @@ int main()
 	t1.add_row(v5);
 	t1.add_row(v6);
 	t1.add_row(v7);
-
-
 
 	cout << "############## stampa per elementi #################" << endl;
 	for(table<int>::table_iterator i = t.begin_ti(); i != t.end_ti(); ++i)
@@ -84,44 +81,15 @@ int main()
 	cout << t << endl;
 	cout << t1 << endl;
 
-
-	/*Table<int>::iterator i(t.get_row_count(), t.get_column_count());
-	Table<string>::iterator i1(t1.get_row_count(), t1.get_column_count());
-
-	cout << "############## stampa per elementi #################" << endl;
-	for(t.begin(i); t.end(i); i.next_elem())
-		cout << t.get_elem(i) << " ";
-	cout << endl;
-
-	for(t1.begin(i1); t1.end(i1); i1.next_elem())
-		cout << t1.get_elem(i1) << " ";
-	cout << endl;
-
-	cout << "############## stampa per righe #################" << endl;
-	for(t.begin(i); t.end(i); i.next_row())
-		cout << t.get_row(i) << endl;
-
-	cout << endl;
-
-	for(t1.begin(i1); t1.end(i1); i1.next_row())
-		cout << t1.get_row(i1) << endl;
-
-	cout << "############## stampa per colonne #################" << endl;
-    for(t.begin(i); t.end(i); i.next_column())
-    	cout << t.get_column(i) << endl;
-
-	cout << "############## stampa per tabella #################" << endl;
-    cout << t;
-
 	cout << "############## funzione map #################" << endl;
     function<bool(int)> f1 =
-		[](int v) -> bool
-		{
-			if(v % 2 == 0)
-				return true;
-			else
-				return false;
-		};
+	[](int v) -> bool
+	{
+		if(v % 2 == 0)
+			return true;
+		else
+			return false;
+	};
 
     function<int(int)> f2 =
 		[](int v) -> int
@@ -135,13 +103,19 @@ int main()
 			return "#" + v + "#";
 		};
 
-    Table<int> t3 = t.map(f1);
-    Table<int> t4 = t.map(f2);
-    Table<string> t5 = t1.map(f3);
+	table<bool> t2 = t.table_map(f1);
+	cout << t2 << endl;
 
-    cout << t3 << endl;
-    cout << t4 << endl;
-    cout << t5 << endl;*/
+	table<int> t3 = t.table_map(f2);
+	cout << t3 << endl;
 
+	table<string> t4 = t1.table_map(f3);
+	cout << t4 << endl;
 
+	cout << "############## aggiunta/eliminazione colonne #################" << endl;
+	t.add_column(2, {0, 0, 0, 0}, "N");
+	cout << t << endl;
+
+	t.delete_column(0);
+	cout << t << endl;
 }

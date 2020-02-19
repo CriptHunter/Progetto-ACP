@@ -51,17 +51,30 @@ public:
 		return column_count;
 	}
 
-	void add_row(vector<T> row)
+	//aggiunge una riga nella posizione specificata
+	void add_row(int pos, vector<T> row)
 	{
 		if(row.size() == column_count)
 		{
-			table_vector.push_back(row);
-			++row_count;
+			if(pos >= 0 && pos <= row_count)
+			{
+				table_vector.insert(table_vector.begin() + pos, row);
+				++row_count;
+			}
+			else
+				cout << pos << " is an invalid position" << endl;
 		}
 		else
 			cout << "ADD_ROW: required vector of size " << column_count << ", got vector of size " << row.size() << endl;
 	}
 
+	//aggiunge una riga alla fine della tabella
+	void add_row(vector<T> row)
+	{
+		add_row(row_count, row);
+	}
+
+	//cancella una riga in posizione pos
 	void delete_row(int pos)
 	{
 		if(pos < row_count && pos >= 0)
@@ -71,6 +84,48 @@ public:
 		}
 		else
 			cout << "DELETE_ROW: row index out of bound" << endl;
+	}
+
+	//aggiunge una colonna in posizione pos, aggiunge l'header corrispondente alla colonna
+	void add_column(int pos, vector<T> column, string _heading)
+	{
+		if(column.size() != row_count)
+		{
+			cout << "ADD_COLUMN: required vector of size " << row_count << ", got vector of size " << column.size() << endl;
+			return;
+		}
+
+		if(pos < 0 || pos > column_count)
+			cout << "ADD_COLUMN: row index out of bound" << endl;
+
+		heading.insert(heading.begin() + pos, _heading);
+		column_count++;
+
+		for(int k = 0; k < row_count; ++k)
+		{
+			vector<T> v = table_vector[k];
+			v.insert(v.begin() + pos, column[k]);
+			table_vector[k] = v;
+		}
+	}
+
+	void delete_column(int pos)
+	{
+		if(pos < 0 || pos > column_count)
+		{
+			cout << "ADD_COLUMN: row index out of bound" << endl;
+			return;
+		}
+
+		column_count--;
+		heading.erase(heading.begin() + pos);
+
+		for(int k = 0; k < row_count; ++k)
+		{
+			vector<T> v = table_vector[k];
+			v.erase(v.begin() + pos);
+			table_vector[k] = v;
+		}
 	}
 
 	void set_heading(vector<string> _heading)
@@ -108,7 +163,6 @@ public:
         		row++;
         		column = 0;
         	}
-
         	return i; 
         }
 
@@ -122,13 +176,12 @@ public:
         	return !(row == other.row && column == other.column);
         }
 
-        int row;
-        int column;
-
     private:
         vector<vector<T>> table_vector;
         int row_count;
-        int column_count;
+        int column_count;       
+        int row;
+        int column;
     };
 
     class row_iterator
@@ -158,11 +211,10 @@ public:
         	return row != other.row + 1;
         }
 
-        int row;
-
     private:
         vector<vector<T>> table_vector;
         int row_count;
+        int row;
     };
 
     class column_iterator
@@ -196,12 +248,11 @@ public:
         	return column != other.column + 1;
         }
 
-        int column;
-
     private:
         vector<vector<T>> table_vector;
         int row_count;
         int column_count;
+        int column;
     };
 
     table_iterator begin_ti()
@@ -234,20 +285,28 @@ public:
     	return column_iterator(table_vector, row_count, column_count, column_count - 1);
     }
 
-	//applica una funzione a tutti gli elementi della tabella, restituisce una nuova tabella
-	/*template <typename X, typename Y>
-	Table<T> map(function<X(Y)> function)
-	{
-		Table<T> t2(get_column_count(), get_heading());
-		typename Table<T>::iterator i(get_row_count(), get_column_count());
-		for(begin(i); end(i); i.next_row())
-		{
-			vector<T> v = get_row(i);
-			transform(v.begin(), v.end(), v.begin(), function);
-			t2.add_row(v);
-		}
-		return t2;
-	}*/
+    //applica la funzione f a tutti gli elementi del vettore v
+    //il vettore return_v contiene elementi dello stesso tipo di quelli ritornati dalla funzione f
+    template <typename X, typename Y>
+    vector<X> vector_map(vector<T> v, function<X(Y)> f)
+    {
+    	vector<X> return_v;
+    	for(const auto& elem : v)
+    		return_v.push_back(f(elem));
+    	return return_v;
+    }
+
+    template <typename X, typename Y>
+    table<X> table_map(function<X(Y)> f)
+    {
+    	table<X> t2(get_column_count(), get_heading());
+    	for(typename table<T>::row_iterator i = begin_ri(); i != end_ri(); ++i)
+    	{
+    		vector<X> v = vector_map(i.get(), f);
+    		t2.add_row(v);
+    	}
+    	return t2;
+    }
 };
 
 template<class T>
