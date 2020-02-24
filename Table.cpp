@@ -109,6 +109,12 @@ public:
 		}
 	}
 
+	//aggiunge una riga alla fine della tabella
+	void add_column(vector<T> column)
+	{
+		add_row(column_count, column);
+	}
+
 	void delete_column(int pos)
 	{
 		if(pos < 0 || pos > column_count)
@@ -141,18 +147,47 @@ public:
 		return heading;
 	}
 
+	vector<T> get_row(int pos) const 
+	{
+		if(pos < 0 || pos >= row_count)
+		{
+			cout << "GET_ROW: row index out of bound";
+			return {};
+		}
+		else
+			return table_vector[pos];
+	}
+
+	vector<T> get_column(int pos) const
+	{
+		if(pos < 0 || pos >= row_count)
+		{
+			cout << "GET_COLUMN: column index out of bound";
+			return {};
+		}
+		else
+		{
+			vector<T> column;
+    		for(int i = 0; i < row_count; i++)
+    			column.push_back(table_vector[i][pos]);
+    		return column;
+		}
+	}
+
 	class table_iterator
     {
     public:
-        table_iterator(vector<vector<T>>& _table_vector, int _row_count, int _column_count, int _row = 0, int _column = 0)
+    	//constructor
+        table_iterator(vector<vector<T>>& _table_vector, int _row = 0, int _column = 0)
         {
-        	table_vector = _table_vector;
+        	table_vector = &_table_vector;
         	row = _row;
         	column = _column;
-        	row_count = _row_count;
-        	column_count = _column_count;
+        	row_count = (*table_vector).size();
+        	column_count = (*table_vector)[0].size();
         }
 
+        //prefix operator++
         table_iterator operator++()
         { 
         	table_iterator i = *this; 
@@ -166,18 +201,36 @@ public:
         	return i; 
         }
 
-        T get() 
+        //postfix operator ++
+        table_iterator operator++(int) 
         { 
-        	return table_vector[row][column];
+        	if(column < column_count - 1)
+        		column++;
+        	else
+        	{
+        		row++;
+        		column = 0;
+        	}
+        	return *this; 
         }
 
-        bool operator!=(const table_iterator& other) 
+        T& operator*() const
+		{
+			return (*table_vector)[row][column];
+		}
+
+        bool operator==(const table_iterator& other) const 
+        {
+        	return table_vector == other.table_vector && row == other.row && column == other.column;
+        }
+
+        bool operator!=(const table_iterator& other) const
         { 
-        	return !(row == other.row && column == other.column);
+        	return !(*this == other);
         }
 
     private:
-        vector<vector<T>> table_vector;
+        vector<vector<T>> *table_vector = nullptr;
         int row_count;
         int column_count;       
         int row;
@@ -255,14 +308,14 @@ public:
         int column;
     };
 
-    table_iterator begin_ti()
+    table_iterator begin()
     {
-    	return table_iterator(table_vector, row_count, column_count);
+    	return table_iterator(table_vector);
     }
 
-    table_iterator end_ti()
+    table_iterator end()
     {
-    	return table_iterator(table_vector, row_count, column_count, row_count - 1, column_count - 1);
+    	return table_iterator(table_vector,row_count - 1, column_count - 1);
     }
 
     row_iterator begin_ri()
@@ -286,9 +339,10 @@ public:
     }
 
     //applica la funzione f a tutti gli elementi del vettore v
+    //la funzione f prende un tipo T e ritorna un tipo X
     //il vettore return_v contiene elementi dello stesso tipo di quelli ritornati dalla funzione f
-    template <typename X, typename Y>
-    vector<X> vector_map(vector<T> v, function<X(Y)> f)
+    template <typename X>
+    vector<X> vector_map(vector<T> v, function<X(T)> f) const
     {
     	vector<X> return_v;
     	for(const auto& elem : v)
@@ -296,16 +350,37 @@ public:
     	return return_v;
     }
 
-    template <typename X, typename Y>
-    table<X> table_map(function<X(Y)> f)
+    template <typename X>
+    vector<X> row_map(int pos, function<X(T)> f) const
+    {
+    	return vector_map(get_row(pos), f);
+    }
+
+    template <typename X>
+    vector<X> column_map(int pos, function<X(T)> f) const
+    {
+    	return vector_map(get_column(pos), f);
+    }
+
+    template <typename X>
+    table<X> table_map(function<X(T)> f) const
     {
     	table<X> t2(get_column_count(), get_heading());
-    	for(typename table<T>::row_iterator i = begin_ri(); i != end_ri(); ++i)
+    	for(auto i = table_vector.begin(); i != table_vector.end(); i++)
     	{
-    		vector<X> v = vector_map(i.get(), f);
+    		vector<X> v = vector_map(*i, f);
     		t2.add_row(v);
     	}
     	return t2;
+    }
+
+	template <typename X>
+    X vector_reduce(vector<T> v, function<X(X, T)> f) const
+    {
+    	X reduced_v {};
+    	for(auto i = v.begin(); i != v.end(); i++)
+    		reduced_v = f(reduced_v, *i);
+    	return reduced_v; 
     }
 };
 
@@ -318,17 +393,15 @@ ostream& operator<<(ostream& stream, const std::vector<T>& values)
     return stream;
 }
 
-
 template <class T>
 ostream &operator<<(ostream &os, table<T>& t)
 {
+	auto vv = t.get_table_vector();
 	cout << t.get_heading() << endl;
-	for(typename table<T>::row_iterator i = t.begin_ri(); i != t.end_ri(); ++i)
-    	cout << i.get() << endl;
+	for(auto i = vv.begin(); i != vv.end(); i++)
+    	cout << *i << endl;
     return os;
 }
-
-
 
 
 

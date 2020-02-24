@@ -1,6 +1,6 @@
 BEGIN {
     FS="[<>]" #variabile awk usata come field separator
-    n = split("name price description calories",tags,/ /)
+    n = split("name,price,description,calories", tags, ",") #parametri split: stringa, array destinazione, delimitatore 
     for (i=1; i<=n; i++) {
         printf "%s", tags[i]
         if(i < n)
@@ -10,13 +10,18 @@ BEGIN {
     }
 }
 
-NF==5 { 
-	tag2val[$2] = $3 
+NF==5 {
+    printf "%s%s%s", "tag2val: ", tag2val["name"], "\n"
+	tag2val[$2] = $3
+}
+
+/[<>]/ {
+
 }
 
 /<\/food>/ {
     for (i=1; i<=n; i++) {
-        printf "%s%s", tag2val[tags[i]], (i<n ? ";":"\n")
+        printf "%s%s", tag2val[tags[i]], (i<n ? ";" : "\n")
     }
 }
 
