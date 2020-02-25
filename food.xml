@@ -17,8 +17,9 @@
 	<food>
 		<name>Berry-Berry Belgian Waffles</name>
 		<price>$8.95</price>
-		<description>fresh berries and cream</description>
 		<calories>900</calories>
+		<description>fresh berries and cream</description>
+
 	</food>
 
 	<food>
@@ -31,7 +32,7 @@
 	<food>
 		<name>Homestyle Breakfast</name>
 		<price>$6.95</price>
-		<description>Two eggs, bacon or sausage</description>
+		<description>Two eggs and bacon or sausage</description>
 		<calories>950</calories>
 	</food>
 
