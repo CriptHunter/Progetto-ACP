@@ -22,13 +22,14 @@ NF==5 {
 	valueBtwTag[$2] = $3
 }
 
-
-#/<\/food>/ {
+# itemTag is the closing xml tag that divides items in the xml document, something like </item>
 $0 ~ itemTag {
+    #print all the value of a row separated by ;
     for (i=1; i<=n; i++) {
         if(i < n)
             # tags[i] is the tag name, used to retrive the tag value
             printf "%s%s", valueBtwTag[tags[i]], ";" 
+        #if it's the last item of the row, it makes a new line
         else
             printf "%s%s", valueBtwTag[tags[i]], "\n"
     }
