@@ -2,10 +2,10 @@
 
 int main()
 {
+	table<int> t0({{2, 5}, {3, 4}, {4, 1}}, {"B", "B1"});
+	cout << t0 << endl;
+
 	table<int> t(3, {"X", "Y", "Z"});
-	table<int> t0(1, {"a"});
-	t0.add_row({1});
-	t0.add_row({2});
 
 	vector<int> v1;
 	v1.push_back(1);

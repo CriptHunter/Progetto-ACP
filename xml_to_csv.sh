@@ -18,4 +18,5 @@ itemTag="</${input}>"
 
 #columns="name,price,description,calories"
 #itemTag="</food>"
+
 awk -v columns=$columns -v itemTag=$itemTag -f xml_to_csv.awk food.xml

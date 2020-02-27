@@ -28,7 +28,7 @@ $0 ~ itemTag {
     for (i=1; i<=n; i++) {
         if(i < n)
             # tags[i] is the tag name, used to retrive the tag value
-            printf "%s%s", valueBtwTag[tags[i]], ";" 
+            printf "%s%s", valueBtwTag[tags[i]], ";"
         #if it's the last item of the row, it makes a new line
         else
             printf "%s%s", valueBtwTag[tags[i]], "\n"

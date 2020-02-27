@@ -8,10 +8,9 @@ using namespace std;
 
 template <typename T>
 
-class table 
-{
+class table {
 private:
-	vector <vector<T>> table_vector;
+	vector<vector<T>> table_vector;
 	vector<string> heading;
 	int row_count;
 	int column_count;
@@ -24,6 +23,30 @@ public:
 	table(int _column_count, vector<string> heading): row_count(0), column_count(_column_count)
 	{
 		set_heading(heading);
+	}
+
+	table(vector<vector<T>> _table_vector, vector<string> _heading)
+	{
+		try 
+		{
+			int n_col = _table_vector[0].size();
+			for(const auto& row : _table_vector)
+				if(row.size() != n_col)
+					throw "CONSTRUCTOR: Trying to add rows with different columns number";
+
+			if(_heading.size() != n_col)
+				throw "CONSTRUCTOR: Trying to add heading with wrong columns number";		
+
+			table_vector = _table_vector;
+			heading = _heading;
+			row_count = table_vector.size();
+			column_count = n_col;
+		}
+
+		catch(const char* msg)
+		{
+			cerr << msg << endl;
+		}
 	}
 
 	//copy constructor
@@ -174,11 +197,11 @@ public:
 		}
 	}
 
-	class table_iterator
+	class iterator
     {
     public:
     	//constructor
-        table_iterator(vector<vector<T>>& _table_vector, int _row = 0, int _column = 0)
+        iterator(vector<vector<T>>& _table_vector, int _row = 0, int _column = 0)
         {
         	table_vector = &_table_vector;
         	row = _row;
@@ -188,9 +211,9 @@ public:
         }
 
         //prefix operator++
-        table_iterator operator++()
+        iterator operator++()
         { 
-        	table_iterator i = *this; 
+        	iterator i = *this; 
         	if(column < column_count - 1)
         		column++;
         	else
@@ -202,7 +225,7 @@ public:
         }
 
         //postfix operator ++
-        table_iterator operator++(int) 
+        iterator operator++(int) 
         { 
         	if(column < column_count - 1)
         		column++;
@@ -219,12 +242,12 @@ public:
 			return (*table_vector)[row][column];
 		}
 
-        bool operator==(const table_iterator& other) const 
+        bool operator==(const iterator& other) const 
         {
         	return table_vector == other.table_vector && row == other.row && column == other.column;
         }
 
-        bool operator!=(const table_iterator& other) const
+        bool operator!=(const iterator& other) const
         { 
         	return !(*this == other);
         }
@@ -237,105 +260,15 @@ public:
         int column;
     };
 
-    class row_iterator
+    
+    iterator begin()
     {
-    public:
-        row_iterator(vector<vector<T>>& _table_vector, int _row_count, int _row = 0)
-        {
-        	table_vector = _table_vector;
-        	row = _row;
-        	row_count = _row_count;
-        }
-
-        row_iterator operator++()
-        { 
-        	row_iterator i = *this; 
-        	row++;
-        	return i; 
-        }
-
-        vector<T> get() 
-        { 
-        	return table_vector[row];
-        }
-
-        bool operator!=(const row_iterator& other) 
-        { 
-        	return row != other.row + 1;
-        }
-
-    private:
-        vector<vector<T>> table_vector;
-        int row_count;
-        int row;
-    };
-
-    class column_iterator
-    {
-    public:
-        column_iterator(vector<vector<T>>& _table_vector, int _row_count, int _column_count, int _column = 0)
-        {
-        	table_vector = _table_vector;
-        	row_count = _row_count;
-        	column = _column;
-        	column_count = _column_count;
-        }
-
-        column_iterator operator++()
-        { 
-        	column_iterator i = *this; 
-        	column++;
-        	return i; 
-        }
-
-        vector<T> get() 
-        { 
-        	vector<T> temp;
-        	for(int i = 0; i < row_count; i++)
-        		temp.push_back(table_vector[i][column]);
-        	return temp;
-        }
-
-        bool operator!=(const column_iterator& other) 
-        { 
-        	return column != other.column + 1;
-        }
-
-    private:
-        vector<vector<T>> table_vector;
-        int row_count;
-        int column_count;
-        int column;
-    };
-
-    table_iterator begin()
-    {
-    	return table_iterator(table_vector);
+    	return iterator(table_vector);
     }
 
-    table_iterator end()
+    iterator end()
     {
-    	return table_iterator(table_vector,row_count - 1, column_count - 1);
-    }
-
-    row_iterator begin_ri()
-    {
-    	return row_iterator(table_vector, row_count);
-    }
-
-    row_iterator end_ri()
-    {
-    	return row_iterator(table_vector, row_count, row_count - 1);
-    }
-
-    column_iterator begin_ci()
-    {
-    	return column_iterator(table_vector, row_count, column_count);
-    }
-
-    column_iterator end_ci()
-    {
-    	return column_iterator(table_vector, row_count, column_count, column_count - 1);
+    	return iterator(table_vector,row_count - 1, column_count - 1);
     }
 
     //applica la funzione f a tutti gli elementi del vettore v
@@ -402,6 +335,3 @@ ostream &operator<<(ostream &os, table<T>& t)
     	cout << *i << endl;
     return os;
 }
-
-
-
