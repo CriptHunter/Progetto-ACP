@@ -10,21 +10,23 @@ template <typename T>
 
 class table {
 private:
-	vector<vector<T>> table_vector;
-	vector<string> heading;
+	vector<vector<T>> table_vector; // values of the table
+	vector<string> heading; //columns names
 	int row_count;
 	int column_count;
 
 public:
-	//costruttore con tabella vuota senza heading
+	// constructor for an empty table without heading
+	// column count is fixed
 	table(int _column_count = 0): row_count(0), column_count(_column_count) { }
 
-	//costruttore con tabella vuota e heading
+	// constructor for an empty table with heading
 	table(int _column_count, vector<string> heading): row_count(0), column_count(_column_count)
 	{
 		set_heading(heading);
 	}
 
+	// constructor for a table made by vector<vector>, with heading
 	table(vector<vector<T>> _table_vector, vector<string> _heading)
 	{
 		try 
@@ -49,7 +51,7 @@ public:
 		}
 	}
 
-	//copy constructor
+	// copy constructor
 	table(const table &other)
 	{
   		row_count = other.get_row_count();
@@ -58,7 +60,7 @@ public:
   		table_vector = other.get_table_vector();
     }
 
-    //ritorna il vettore della tabella per copia
+    // return the table vector by copy
     vector<vector<T>> get_table_vector() const
     {
     	return table_vector;
@@ -74,7 +76,8 @@ public:
 		return column_count;
 	}
 
-	//aggiunge una riga nella posizione specificata
+	// add a row in position pos
+	// it does not overwrite existing row
 	void add_row(int pos, vector<T> row)
 	{
 		if(row.size() == column_count)
@@ -91,13 +94,13 @@ public:
 			cout << "ADD_ROW: required vector of size " << column_count << ", got vector of size " << row.size() << endl;
 	}
 
-	//aggiunge una riga alla fine della tabella
+	// add a row at the end of the table
 	void add_row(vector<T> row)
 	{
 		add_row(row_count, row);
 	}
 
-	//cancella una riga in posizione pos
+	// delete a row in position pos
 	void delete_row(int pos)
 	{
 		if(pos < row_count && pos >= 0)
@@ -109,7 +112,7 @@ public:
 			cout << "DELETE_ROW: row index out of bound" << endl;
 	}
 
-	//aggiunge una colonna in posizione pos, aggiunge l'header corrispondente alla colonna
+	// add a column in position pos, add to the heading the column name
 	void add_column(int pos, vector<T> column, string _heading)
 	{
 		if(column.size() != row_count)
@@ -132,12 +135,13 @@ public:
 		}
 	}
 
-	//aggiunge una riga alla fine della tabella
-	void add_column(vector<T> column)
+	// add a column at the end of the table
+	void add_column(vector<T> column, string _heading)
 	{
-		add_row(column_count, column);
+		add_column(column_count, column, _heading);
 	}
 
+	// delete a column in position pos
 	void delete_column(int pos)
 	{
 		if(pos < 0 || pos > column_count)
@@ -197,10 +201,11 @@ public:
 		}
 	}
 
+	// table iterator pointing to a single cell in position row | column
 	class iterator
     {
     public:
-    	//constructor
+    	// constructor
         iterator(vector<vector<T>>& _table_vector, int _row = 0, int _column = 0)
         {
         	table_vector = &_table_vector;
@@ -210,7 +215,7 @@ public:
         	column_count = (*table_vector)[0].size();
         }
 
-        //prefix operator++
+        // prefix operator++
         iterator operator++()
         { 
         	iterator i = *this; 
@@ -224,7 +229,7 @@ public:
         	return i; 
         }
 
-        //postfix operator ++
+        // postfix operator ++
         iterator operator++(int) 
         { 
         	if(column < column_count - 1)
@@ -237,16 +242,19 @@ public:
         	return *this; 
         }
 
+        // return by reference the value of the cell pointed by the iterator
         T& operator*() const
 		{
 			return (*table_vector)[row][column];
 		}
 
+		// checks if two iterator are equals
         bool operator==(const iterator& other) const 
         {
         	return table_vector == other.table_vector && row == other.row && column == other.column;
         }
 
+        // checks if two iterator are not equals
         bool operator!=(const iterator& other) const
         { 
         	return !(*this == other);
@@ -261,19 +269,21 @@ public:
     };
 
     
+    // return an iterator pointing at the first cell of the table
     iterator begin()
     {
     	return iterator(table_vector);
     }
 
+    // return an iterator pointing at the last cell of the table
     iterator end()
     {
     	return iterator(table_vector,row_count - 1, column_count - 1);
     }
 
-    //applica la funzione f a tutti gli elementi del vettore v
-    //la funzione f prende un tipo T e ritorna un tipo X
-    //il vettore return_v contiene elementi dello stesso tipo di quelli ritornati dalla funzione f
+    // apply the function f to every element of vector v
+    // the function f takes a value of type T and return a value of type X
+    // the returned vector return_v contains element of type X, as the function f
     template <typename X>
     vector<X> vector_map(vector<T> v, function<X(T)> f) const
     {
@@ -283,18 +293,21 @@ public:
     	return return_v;
     }
 
+    // apply the map function to a row in position pos
     template <typename X>
     vector<X> row_map(int pos, function<X(T)> f) const
     {
     	return vector_map(get_row(pos), f);
     }
 
+    // apply the map function to a column in position pos
     template <typename X>
     vector<X> column_map(int pos, function<X(T)> f) const
     {
     	return vector_map(get_column(pos), f);
     }
 
+    // apply map to all the element of the table
     template <typename X>
     table<X> table_map(function<X(T)> f) const
     {
@@ -307,6 +320,9 @@ public:
     	return t2;
     }
 
+    // reduce a vector to  value using the function f
+    // the function takes two arguments of type X T, and return a value of type X
+    // the first argument is the accumulator, the second is an element of the vector
 	template <typename X>
     X vector_reduce(vector<T> v, function<X(X, T)> f) const
     {
@@ -317,6 +333,8 @@ public:
     }
 };
 
+// override of the ostream operator << for a vector
+// it prints the vector between []
 template<class T>
 ostream& operator<<(ostream& stream, const std::vector<T>& values)
 {
@@ -326,6 +344,8 @@ ostream& operator<<(ostream& stream, const std::vector<T>& values)
     return stream;
 }
 
+// override of the ostream operator << for a table
+// it prints the heading, and the table row by row between []
 template <class T>
 ostream &operator<<(ostream &os, table<T>& t)
 {
