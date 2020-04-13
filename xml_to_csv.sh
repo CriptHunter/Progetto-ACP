@@ -5,7 +5,7 @@ fileNoExt=${fileArray[0]} # filename without extension
 read -p "Enter the number of columns : " n_col
 
 # read columns names
-for ((i = 1; i <= n_col; i++)); do
+for (i = 1; i <= n_col; i++); do
 	read -p "Enter column ${i}: " input
 	if (( $i == 1 ));
 	then
