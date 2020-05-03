@@ -331,6 +331,21 @@ public:
     		reduced_v = f(reduced_v, *i);
     	return reduced_v; 
     }
+
+	// apply the reduce function to a row in position pos
+    template <typename X>
+    X row_reduce(int pos, function<X(X, T)> f) const
+    {
+    	return vector_reduce(get_row(pos), f);
+    }
+
+	// apply the reduce function to a row in position pos
+    template <typename X>
+    X column_reduce(int pos, function<X(X, T)> f) const
+    {
+    	return vector_reduce(get_column(pos), f);
+    }
+
 };
 
 // override of the ostream operator << for a vector
@@ -355,3 +370,4 @@ ostream &operator<<(ostream &os, table<T>& t)
     	cout << *i << endl;
     return os;
 }
+

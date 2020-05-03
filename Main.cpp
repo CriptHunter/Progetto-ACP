@@ -133,7 +133,6 @@ int main()
 		{
 			if(total == 0)
 				return v;
-			
 			return v * total;
 		};
 
@@ -143,12 +142,15 @@ int main()
 			return total_length + s.length();
 		};
 
-	int r1 = t.vector_reduce(v1, f4);
-	cout << v1 << " ---> " << r1 << endl;
+	int r1 = 0;
+	r1 = t.row_reduce(3, f4);
+	cout << t.get_row(3) << " ---> " << r1 << endl;
 
-	int r2 = t1.vector_reduce(v5, f5);
-	cout << v5 << " ---> " << r2 << endl;
+	int r2 = t1.row_reduce(2, f5);
+	cout << t1.get_row(2) << " ---> " << r2 << endl;
 
+	int r3 = t.column_reduce(2, f4);
+	cout << t.get_column(2) << " ---> " << r3 << endl;
 
 	cout << "############## aggiunta/eliminazione colonne #################" << endl;
 	t.add_column(2, {0, 0, 0, 0}, "N");
@@ -160,5 +162,4 @@ int main()
 	cout << "############## copy constructor #################" << endl;
 	table<string> t5(t4);
 	cout << t5 << endl;
-
 }
