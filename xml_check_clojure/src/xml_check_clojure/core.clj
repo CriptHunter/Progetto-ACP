@@ -5,15 +5,13 @@
 
 ;XML file to be parsed
 (def xml_file "food.xml")
-;parsed XML file
-(def xml_file_parsed (xml/parse xml_file))
 
 ;return true if the XML file can be parsed by clojure.xml library
 (defn well-formed? [filename]
   (try
     (xml/parse filename)
     true
-    (catch Exception e false))
+    (catch Exception ex false))
   )
 
 ;print list elements on separate lines with spacing
@@ -41,8 +39,8 @@
 (defn get_tags [L]
   (map :tag L))
 
-
 ;compare all the tags on the same level of a XML file
+;also check the outer tag
 (defn compare_tags [L]
   (if (and (<= (count L) 1))
     true
@@ -54,15 +52,11 @@
          ))
   )
 
-;get depth of XML file to avoid nested tag
-(defn get_depth [L]
-  true
-  )
-
 (defn -main []
   (print "well formed? ")
   (println (well-formed? xml_file))
-  (print "same tags? ")
-  (println (compare_tags (:content xml_file_parsed)))
+  (when (well-formed? xml_file)
+      (print "same tags? ")
+      (println (compare_tags (:content (xml/parse xml_file))))
+    )
   )
-
