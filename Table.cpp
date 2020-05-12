@@ -201,7 +201,7 @@ public:
 		}
 	}
 
-	// table iterator pointing to a single cell in position row | column
+	// table iterator, iterate the element in sequence
 	class iterator
     {
     public:
