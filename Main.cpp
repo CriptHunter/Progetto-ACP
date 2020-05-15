@@ -53,17 +53,14 @@ int main()
 	t1.add_row(v6);
 	t1.add_row(v7);
 
-	cout << "############## stampa per elementi #################" << endl;
+	cout << "############## print using iterator #################" << endl;
 	for(auto i = t.begin(); i != t.end(); i++)
 		cout << *i << endl;
-
-
-	cout << endl;
 
 	for(auto i = t1.begin(); i != t1.end(); ++i)
 		cout << *i << endl;
 
-	cout << "############## stampa per righe #################" << endl;
+	cout << "############## print by rows #################" << endl;
 	for(int i = 0; i != t.get_row_count(); ++i)
 		cout << t.get_row(i) << endl;
 
@@ -72,7 +69,7 @@ int main()
 	for(int i = 0; i != t1.get_row_count(); ++i)
 		cout << t1.get_row(i) << endl;
 
-	cout << "############## stampa per colonne #################" << endl;
+	cout << "############## print by columns #################" << endl;
 	for(int i = 0; i != t.get_column_count(); ++i)
 		cout << t.get_column(i) << endl;
 
@@ -81,11 +78,11 @@ int main()
 	for(int i = 0; i != t1.get_column_count(); ++i)
 		cout << t1.get_column(i) << endl;
 
-	cout << "############## stampa tabella #################" << endl;
+	cout << "############## print table using ostream<< #################" << endl;
 	cout << t << endl;
 	cout << t1 << endl;
 
-	cout << "############## funzione map #################" << endl;
+	cout << "############## map function #################" << endl;
     function<bool(int)> f1 =
 		[](int v) -> bool
 		{
@@ -128,7 +125,7 @@ int main()
 	vector<int> ve2 = t1.column_map(2, f6);
 	cout << "map di una colonna: " << ve2 << endl;
 
-	cout << "############## funzione reduce #################" << endl;
+	cout << "############## reduce function #################" << endl;
 	function<int(int, int)> f4 =
 		[](int total, int v) -> int
 		{
@@ -153,7 +150,7 @@ int main()
 	int r3 = t.column_reduce(2, f4);
 	cout << t.get_column(2) << " ---> " << r3 << endl;
 
-	cout << "############## aggiunta/eliminazione colonne #################" << endl;
+	cout << "############## add/delete columns #################" << endl;
 	t.add_column(2, {0, 0, 0, 0}, "N");
 	cout << t << endl;
 

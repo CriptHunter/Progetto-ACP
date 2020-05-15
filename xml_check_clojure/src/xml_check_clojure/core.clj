@@ -24,7 +24,7 @@
         (print_list (rest L))))
   )
 
-;true if two lists have the same elements in the same position
+;true if two lists have the same lenght and the same elements in the same position
 (defn equal_list? [L1 L2]
   (if (not= (count L1) (count L2))
     false

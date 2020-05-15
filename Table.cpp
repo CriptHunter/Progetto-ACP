@@ -112,7 +112,7 @@ public:
 			cout << "DELETE_ROW: row index out of bound" << endl;
 	}
 
-	// add a column in position pos, add to the heading the column name
+	// add a column in position pos, it add to the heading the column name
 	void add_column(int pos, vector<T> column, string _heading)
 	{
 		if(column.size() != row_count)
@@ -283,7 +283,7 @@ public:
 
     // apply the function f to every element of vector v
     // the function f takes a value of type T and return a value of type X
-    // the returned vector return_v contains element of type X, as the function f
+    // the returned vector return_v contains element of type X as the function f
     template <typename X>
     vector<X> vector_map(vector<T> v, function<X(T)> f) const
     {
@@ -321,8 +321,8 @@ public:
     }
 
     // reduce a vector to  value using the function f
-    // the function takes two arguments of type X T, and return a value of type X
-    // the first argument is the accumulator, the second is an element of the vector
+    // the function takes two arguments of type X and T,  return a value of type X
+    // the first argument is the accumulator, the second is a vector element
 	template <typename X>
     X vector_reduce(vector<T> v, function<X(X, T)> f) const
     {
@@ -339,7 +339,7 @@ public:
     	return vector_reduce(get_row(pos), f);
     }
 
-	// apply the reduce function to a row in position pos
+	// apply the reduce function to a column in position pos
     template <typename X>
     X column_reduce(int pos, function<X(X, T)> f) const
     {
@@ -349,7 +349,7 @@ public:
 };
 
 // override of the ostream operator << for a vector
-// it prints the vector between []
+// it prints the vector between square brackets []
 template<class T>
 ostream& operator<<(ostream& stream, const std::vector<T>& values)
 {
