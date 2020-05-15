@@ -162,7 +162,7 @@ int main()
 	cout << t5 << endl;
 
 	cout << "############## conversion from CSV #################" << endl;	
-	string csv = "/home/luca/Desktop/Progetto-ACP/conversion.csv";
+	string csv = "conversion.csv";
     Conversion<string> c;
     table<string> tC = c.createTable(csv);
     cout << tC << endl;
