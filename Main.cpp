@@ -1,4 +1,4 @@
-#include "Table.cpp"
+#include "Conversion.cpp"
 
 int main()
 {
@@ -160,4 +160,13 @@ int main()
 	cout << "############## copy constructor #################" << endl;
 	table<string> t5(t4);
 	cout << t5 << endl;
+
+	cout << "############## conversion from CSV #################" << endl;	
+	string csv = "/home/luca/Desktop/Progetto-ACP/conversion.csv";
+    Conversion<string> c;
+    table<string> tC = c.createTable(csv);
+    cout << tC << endl;
+
+	//write table t1 to prova.csv
+    c.writeCSV(t1, "prova.csv");
 }
