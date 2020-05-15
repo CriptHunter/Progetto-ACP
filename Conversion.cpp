@@ -50,8 +50,7 @@ class Conversion{
         }
         writefile << "\n";
 
-        vector< vector<int> >::iterator row;
-        vector<int>::iterator col;
+
         vector<vector<T>> elements = t.get_table_vector();
         for (typename vector<vector<T>>::const_iterator i = elements.begin(); i != elements.end(); ++i){
             size = heading.size();
