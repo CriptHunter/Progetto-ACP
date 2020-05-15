@@ -38,9 +38,9 @@ class Conversion{
     static void writeCSV(table<T>& t, string fileName){
         ofstream writefile;
         writefile.open(fileName);
-        vector<T> heading = t.get_heading();
+        vector<string> heading = t.get_heading();
         int size = heading.size();
-        for (typename vector<T>::const_iterator i = heading.begin(); i != heading.end(); ++i){
+        for (typename vector<string>::const_iterator i = heading.begin(); i != heading.end(); ++i){
             writefile << *i;
             size --;
             if(size != 0){
