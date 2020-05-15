@@ -163,10 +163,35 @@ int main()
 
 	cout << "############## conversion from CSV #################" << endl;	
 	string csv = "conversion.csv";
-    Conversion<string> c;
-    table<string> tC = c.createTable(csv);
-    cout << tC << endl;
+    Conversion<string> conversion_string;
+    table<string> t6 = conversion_string.createTable(csv);
+    cout << t6 << endl;
 
+	cout << "############## conversion to CSV #################" << endl;	
 	//write table t1 to prova.csv
-    c.writeCSV(t1, "prova.csv");
+    conversion_string.writeCSV(t1, "string.csv");
+	Conversion<int> conversion_int;
+	conversion_int.writeCSV(t, "int.csv"); 
+	cout << "done... look for csv files" << endl;
+
+	cout << "############## table of string to other type #################" << endl;	
+	table<string> t7 = conversion_string.createTable("int.csv");
+
+    function<int(string)> f7 =
+		[](string s) -> int {
+			int i = 0;
+			try {
+				i = stoi(s);
+			}
+			catch(exception e) {
+				cout << "the string " << s << " must represent an integer number to be converted, putting 0 instead" << endl;
+				i = 0;
+			}
+			return i;
+		};
+
+	table<int> t8 = t6.table_map(f7);
+
+	cout << t7 << endl;
+	cout << t8 << endl;
 }
