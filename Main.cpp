@@ -191,7 +191,9 @@ int main()
 		};
 
 	table<int> t8 = t6.table_map(f7);
+	table<int> t9 = t7.table_map(f7);
 
 	cout << t7 << endl;
 	cout << t8 << endl;
+	cout << t9 << endl;
 }

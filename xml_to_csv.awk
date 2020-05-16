@@ -1,4 +1,4 @@
-# to make heading
+# to make xml heading
 BEGIN {
     FS="[<>]" # field separator, it's an AWK's variable
     n = split(columns, tags, ",") # split parameters: a string, a destination array, a delimiter 
@@ -13,11 +13,10 @@ BEGIN {
 
 # when the number of field is 5
 NF==5 {
-    # $1 some spaces (???) 
+
     # $2 is the name of the tag <...>
     # $3 is the value between <> and </>
     # $4 is the name of the tag </...>
-    # $5 some spaces (???)
 
 	valueBtwTag[$2] = $3
 }
