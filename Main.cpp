@@ -177,7 +177,7 @@ int main()
 	cout << "############## table of string to other type #################" << endl;	
 	table<string> t7 = conversion_string.createTable("int.csv");
 
-    function<int(string)> f7 =
+    function<int(string)> to_int =
 		[](string s) -> int {
 			int i = 0;
 			try {
@@ -190,10 +190,31 @@ int main()
 			return i;
 		};
 
-	table<int> t8 = t6.table_map(f7);
-	table<int> t9 = t7.table_map(f7);
+	table<int> t8 = t6.table_map(to_int);
+	table<int> t9 = t7.table_map(to_int);
 
 	cout << t7 << endl;
 	cout << t8 << endl;
 	cout << t9 << endl;
+
+	cout << "##################################### EXAMPLE OF USAGE ####################################" << endl;
+	string path = "int.csv";
+    Conversion<int> c_int;
+    table<string> table_string = c_int.createTable(path);
+	table<int>  table_int = table_string.table_map(to_int);
+	cout << table_int << endl;
+
+	function<int(int, int)> product =
+	[](int total, int v) -> int
+		{
+			if(total == 0)
+				return v;
+			return v * total;
+		};
+
+	int column_product = table_int.column_reduce(0, product);
+	cout << "column 1 product: " << column_product << endl << endl;
+	table_int.delete_row(2);
+	c_int.writeCSV(table_int, "int_new.csv");
+	cout << table_int << endl;
 }

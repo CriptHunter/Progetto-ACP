@@ -8,16 +8,16 @@ using namespace std;
 template <typename T>
 class Conversion{
     public:
-    static table<T> createTable(string fileName){
+    static table<string> createTable(string fileName){
         ifstream input(fileName);
-        vector<vector<T>> rows;
+        vector<vector<string>> rows;
         
-        vector<T> tempV;
+        vector<string> tempV;
         //create a vector of rows
         for(string line; getline( input, line ); ){
             stringstream ss(line);
             string item;
-            T elem;
+            string elem;
             char delim = ';';
             while(getline(ss, item, delim)){
                 tempV.push_back(item);
@@ -30,9 +30,8 @@ class Conversion{
         //erase the first row that's the heading
         vector<string> heading = rows.at(0);
         rows.erase(rows.begin());
-        table<T> t(rows, heading);
+        table<string> t(rows, heading);
         return t;
-
     }
 
     static void writeCSV(table<T>& t, string fileName){
