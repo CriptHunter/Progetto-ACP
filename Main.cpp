@@ -157,6 +157,18 @@ int main()
 	t.delete_column(0);
 	cout << t << endl;
 
+	cout << "############## set rows/columns #################" << endl;
+	vector<int> v8 = {1, 2, 3};
+	t.set_row(v8, 2);
+
+	t.set_column({7, 8, 9, 9}, 0, "H");
+
+	cout << t << endl;
+
+	cout << "############## edit elements ###################" << endl;	
+	t.set_elem(7, 3, 1);
+	cout << t << endl;
+
 	cout << "############## copy constructor #################" << endl;
 	table<string> t5(t4);
 	cout << t5 << endl;

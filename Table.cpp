@@ -161,6 +161,25 @@ public:
 		}
 	}
 
+	void set_elem(T elem, int row, int column)
+	{
+		vector<T> tmp_row = get_row(row);
+		tmp_row[column] = elem;
+		set_row(tmp_row, row);
+	}
+
+	void set_row(vector<T> new_row, int pos)
+	{
+		delete_row(pos);
+		add_row(pos, new_row);
+	}
+
+	void set_column(vector<T> new_column, int pos, string heading)
+	{
+		delete_column(pos);
+		add_column(pos, new_column, heading);
+	}
+
 	void set_heading(vector<string> _heading)
 	{
 		if(_heading.size() == column_count)

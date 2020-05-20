@@ -1,8 +1,5 @@
-main: Main.o
-	g++ -o main Main.o
-
-Main.o: Main.cpp
-	g++ -c Main.cpp
+main: Main.cpp
+	g++ Main.cpp -o main
 
 clean: 
-	rm main Main.o
+	rm main
