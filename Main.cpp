@@ -160,9 +160,7 @@ int main()
 	cout << "############## set rows/columns #################" << endl;
 	vector<int> v8 = {1, 2, 3};
 	t.set_row(v8, 2);
-
 	t.set_column({7, 8, 9, 9}, 0, "H");
-
 	cout << t << endl;
 
 	cout << "############## edit elements ###################" << endl;	
@@ -202,18 +200,18 @@ int main()
 			return i;
 		};
 
-	table<int> t8 = t6.table_map(to_int);
+	//table<int> t8 = t6.table_map(to_int);
 	table<int> t9 = t7.table_map(to_int);
 
 	cout << t7 << endl;
-	cout << t8 << endl;
+	//cout << t8 << endl;
 	cout << t9 << endl;
 
 	cout << "##################################### EXAMPLE OF USAGE ####################################" << endl;
 	string path = "int.csv";
     Conversion<int> c_int;
-    table<string> table_string = c_int.createTable(path);
-	table<int>  table_int = table_string.table_map(to_int);
+	table<int> table_int = c_int.createTable(path, to_int);
+
 	cout << table_int << endl;
 
 	function<int(int, int)> product =
